@@ -37,6 +37,17 @@ const sections = [
 
 const Index = () => {
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+
+  const handleLogin = (name: string) => {
+    setUserName(name);
+    localStorage.setItem("userName", name);
+  };
+
+  const handleLogout = () => {
+    setUserName(null);
+    localStorage.removeItem("userName");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
@@ -46,7 +57,9 @@ const Index = () => {
           <div className="flex items-center gap-3">
             <PiLogo size={48} />
             <div>
-              <h1 className="text-xl font-bold text-primary">Познающий</h1>
+              <h1 className="text-xl font-bold text-primary">
+                Познающий{userName && <span className="text-secondary"> {userName}</span>}
+              </h1>
               <p className="text-xs text-muted-foreground">Образовательный портал</p>
             </div>
           </div>
@@ -55,10 +68,17 @@ const Index = () => {
               <Icon name="BookOpen" size={18} className="mr-2" />
               Каталог
             </Button>
-            <Button onClick={() => setAuthDialogOpen(true)}>
-              <Icon name="User" size={18} className="mr-2" />
-              Войти
-            </Button>
+            {userName ? (
+              <Button variant="outline" onClick={handleLogout}>
+                <Icon name="LogOut" size={18} className="mr-2" />
+                Выйти
+              </Button>
+            ) : (
+              <Button onClick={() => setAuthDialogOpen(true)}>
+                <Icon name="User" size={18} className="mr-2" />
+                Войти
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -184,7 +204,7 @@ const Index = () => {
         </div>
       </footer>
 
-      <AuthDialog open={authDialogOpen} onOpenChange={setAuthDialogOpen} />
+      <AuthDialog open={authDialogOpen} onOpenChange={setAuthDialogOpen} onLogin={handleLogin} />
     </div>
   );
 };

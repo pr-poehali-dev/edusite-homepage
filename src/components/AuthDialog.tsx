@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,23 +9,25 @@ import Icon from "@/components/ui/icon";
 interface AuthDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onLogin: (name: string) => void;
 }
 
-const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [registerName, setRegisterName] = useState("");
-  const [registerEmail, setRegisterEmail] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-
-  const handleLogin = (e: React.FormEvent) => {
+const AuthDialog = ({ open, onOpenChange, onLogin }: AuthDialogProps) => {
+  const handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Login:", { loginEmail, loginPassword });
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("login-email") as string;
+    const name = email.split("@")[0];
+    onLogin(name);
+    onOpenChange(false);
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Register:", { registerName, registerEmail, registerPassword });
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("register-name") as string;
+    onLogin(name);
+    onOpenChange(false);
   };
 
   return (
@@ -45,15 +47,14 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
           </TabsList>
 
           <TabsContent value="login" className="space-y-4 mt-4">
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="login-email">Email</Label>
                 <Input
                   id="login-email"
+                  name="login-email"
                   type="email"
                   placeholder="example@mail.ru"
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
                   required
                 />
               </div>
@@ -61,10 +62,9 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
                 <Label htmlFor="login-password">Пароль</Label>
                 <Input
                   id="login-password"
+                  name="login-password"
                   type="password"
                   placeholder="••••••••"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
                   required
                 />
               </div>
@@ -76,15 +76,14 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
           </TabsContent>
 
           <TabsContent value="register" className="space-y-4 mt-4">
-            <form onSubmit={handleRegister} className="space-y-4">
+            <form onSubmit={handleRegisterSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="register-name">Имя</Label>
                 <Input
                   id="register-name"
+                  name="register-name"
                   type="text"
                   placeholder="Иван Иванов"
-                  value={registerName}
-                  onChange={(e) => setRegisterName(e.target.value)}
                   required
                 />
               </div>
@@ -92,10 +91,9 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
                 <Label htmlFor="register-email">Email</Label>
                 <Input
                   id="register-email"
+                  name="register-email"
                   type="email"
                   placeholder="example@mail.ru"
-                  value={registerEmail}
-                  onChange={(e) => setRegisterEmail(e.target.value)}
                   required
                 />
               </div>
@@ -103,10 +101,9 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
                 <Label htmlFor="register-password">Пароль</Label>
                 <Input
                   id="register-password"
+                  name="register-password"
                   type="password"
                   placeholder="••••••••"
-                  value={registerPassword}
-                  onChange={(e) => setRegisterPassword(e.target.value)}
                   required
                 />
               </div>
