@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
+import PiLogo from "@/components/PiLogo";
+import AuthDialog from "@/components/AuthDialog";
 
 const sections = [
   {
@@ -33,24 +36,30 @@ const sections = [
 ];
 
 const Index = () => {
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
       {/* Header */}
       <header className="border-b border-border/40 bg-card/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded flex items-center justify-center">
-              <Icon name="GraduationCap" className="text-primary-foreground" size={24} />
-            </div>
+            <PiLogo size={48} />
             <div>
-              <h1 className="text-xl font-bold text-primary">Техническая библиотека</h1>
+              <h1 className="text-xl font-bold text-primary">Познающий</h1>
               <p className="text-xs text-muted-foreground">Образовательный портал</p>
             </div>
           </div>
-          <Button variant="outline" className="hidden sm:flex">
-            <Icon name="BookOpen" size={18} className="mr-2" />
-            Каталог
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" className="hidden sm:flex">
+              <Icon name="BookOpen" size={18} className="mr-2" />
+              Каталог
+            </Button>
+            <Button onClick={() => setAuthDialogOpen(true)}>
+              <Icon name="User" size={18} className="mr-2" />
+              Войти
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -170,10 +179,12 @@ const Index = () => {
       <footer className="border-t border-border/40 bg-card/50 mt-16">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center text-sm text-muted-foreground">
-            <p>© 2026 Техническая библиотека. Образовательная платформа для инженеров.</p>
+            <p>© 2026 Познающий. Образовательная платформа для инженеров.</p>
           </div>
         </div>
       </footer>
+
+      <AuthDialog open={authDialogOpen} onOpenChange={setAuthDialogOpen} />
     </div>
   );
 };
